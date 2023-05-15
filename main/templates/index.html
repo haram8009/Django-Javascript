@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extrahead %}
+  <script defer="defer" src={% static 'main/js/index.js' %}></script>
+{% endblock extrahead %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <a href="{% url 'user:signout' %}">로그아웃</a>
+    <br/>
+    <a href="{% url 'article:new' %}">글 작성</a>
+  {% else %}
+    <a href="{% url 'user:signin' %}">로그인</a>
+    <br/>
+    <a href="{% url 'user:signup' %}">회원가입</a>
+  {% endif %}
+
+  <hr/>
+
+  <div class="article-list"></div>
+{% endblock content %}

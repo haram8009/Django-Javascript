@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extrahead %}
+  <script>
+    const likeUrl = "{% url 'article:likes' id=article.id %}";
+    const userId = "{{request.user.id}}"
+    let liked = "{{liked}}"
+  </script>
+  <script defer="defer" src={% static 'article/js/detail.js' %}></script>
+{% endblock extrahead %}
+
+{% block content %}
+  <h1>{{article.title}}</h1>
+  <p>
+    {% for image in images %}
+      <img src="{{image.image.url}}" alt="이미지" width="200px"/>
+    {% endfor %}
+    {{article.content}}
+  </p>
+
+  <div class='a-list'>
+    <a href="{% url 'main:index' %}">홈으로</a>
+    <a href="{% url 'article:edit' id=article.id %}">글 수정</a>
+    <a href="{% url 'article:destroy' id=article.id %}">글 삭제</a>
+    <button href="{% url 'article:likes' id=article.id %}" id='like'>
+      ♥
+      {{like_count}}</button>
+  </div>
+
+  {% for comment in comments %}
+    <hr/>
+    <p>{{comment.content}}</p>
+    <p>{{comment.created_at}}
+      댓글쓴이:
+      {{ comment.author }}</p>
+
+  {% endfor %}
+  <form action="{% url 'article:new_comment' id=article.id %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="content"/>
+    <button type="submit">댓글 달기</button>
+  </form>
+{% endblock content %}
